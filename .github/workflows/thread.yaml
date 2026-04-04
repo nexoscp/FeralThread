@@ -1,11 +1,29 @@
 name: Open Thread Border Router
-on: push
+on:
+  workflow_dispatch:
+    inputs:
+      BACKBONE_ROUTER:
+        description: BACKBONE_ROUTER
+        required: true
+        default: '1'
+        type: choice
+        options:
+          - '0'
+          - '1'
+      BORDER_ROUTING:
+        description: BORDER_ROUTING
+        required: true
+        default: '1'
+        type: choice
+        options:
+          - '0'
+          - '1'
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      BACKBONE_ROUTER: 1
-      BORDER_ROUTING: 1
+      BACKBONE_ROUTER: ${{ inputs.BACKBONE_ROUTER }}
+      BORDER_ROUTING: ${{ inputs.BORDER_ROUTING }}
       NAT64: 0
       DNS64: 0
       DHCPV6_PD: 0
