@@ -1,0 +1,58 @@
+name: Open Thread Border Router
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      BACKBONE_ROUTER: 1
+      BORDER_ROUTING: 1
+      NAT64: 0
+      DNS64: 0
+      DHCPV6_PD: 0
+      DHCPV6_PD_REF: 0
+      WEB_GUI: 1
+      REST_API: 1
+      INFRA_IF_NAME: eth0
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          repository: 'openthread/ot-br-posix'
+          fetch-depth: '1'
+          path: ot-br-posix
+      - run: bash ./script/bootstrap
+        working-directory: ot-br-posix
+      - run: bash ./script/setup
+        working-directory: ot-br-posix
+      - name: copy all the things
+        run: |
+          mkdir -p .debpkg/usr/bin
+          cp /usr/sbin/otbr-agent .debpkg/usr/bin/otbr-agent
+          cp /usr/sbin/ot-ctl .debpkg/usr/bin/ot-ctl
+          cp /usr/sbin/otbr-web .debpkg/usr/bin/otbr-web
+          mkdir -p .debpkg/etc/dbus-1/system.d/
+          cp  /etc/dbus-1/system.d/otbr-agent.conf  .debpkg/etc/dbus-1/system.d/otbr-agent.conf
+          mkdir -p .debpkg/usr/lib/systemd/system/
+          cp /usr/lib/systemd/system/otbr-agent.service .debpkg/usr/lib/systemd/system/otbr-agent.service
+          cp /usr/lib/systemd/system/otbr-web.service .debpkg/usr/lib/systemd/system/otbr-web.service
+          mkdir -p .debpkg/etc/default/
+          cp /etc/default/otbr-agent .debpkg/etc/default/otbr-agent
+          mkdir -p .debpkg/usr/share/otbr-web/frontend/
+          cp -r /usr/share/otbr-web/frontend/ .debpkg/usr/share/otbr-web/frontend/
+      - uses: jiro4989/build-deb-action@v4
+        with:
+            package: OpenThreadBorderRouter
+            package_root: .debpkg
+            maintainer: nobody
+            version: '1'
+            arch: 'amd64' # optional
+            depends: '' # optional
+            pre_depends: 'libc6 (>= 2.2.1)' # optional
+            desc: 'Open Thread Border Router' # optional
+            homepage: 'https://github.com/openthread/ot-br-posix/'
+            section: 'unknown'   # optional
+            priority: 'required' # optional
+      - name: 'Upload Artifact'
+        uses: actions/upload-artifact@v7
+        with:
+          name: Debian package amd64
+          path: '*.deb'
