@@ -40,17 +40,17 @@ jobs:
           cp -r /usr/share/otbr-web/frontend/ .debpkg/usr/share/otbr-web/frontend/
       - uses: jiro4989/build-deb-action@v4
         with:
-            package: OpenThreadBorderRouter
-            package_root: .debpkg
-            maintainer: nobody
-            version: '1'
-            arch: 'amd64' # optional
-            depends: '' # optional
-            pre_depends: 'libc6 (>= 2.2.1)' # optional
-            desc: 'Open Thread Border Router' # optional
-            homepage: 'https://github.com/openthread/ot-br-posix/'
-            section: 'unknown'   # optional
-            priority: 'required' # optional
+          package: OpenThreadBorderRouter
+          package_root: .debpkg
+          maintainer: nobody
+          version: '1'
+          arch: 'amd64' # optional
+          depends: '' # optional
+          pre_depends: 'libc6 (>= 2.2.1)' # optional
+          desc: 'Open Thread Border Router' # optional
+          homepage: 'https://github.com/openthread/ot-br-posix/'
+          section: 'unknown'   # optional
+          priority: 'required' # optional
       - name: 'Upload Artifact'
         uses: actions/upload-artifact@v7
         with:
