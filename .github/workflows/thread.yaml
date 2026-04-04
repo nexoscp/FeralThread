@@ -1,4 +1,5 @@
 name: Open Thread Border Router
+run-name: 'Backbone: ${{ inputs.BACKBONE_ROUTER }}, Border: ${{ inputs.BORDER_ROUTING }}, NAT64: ${{ inputs.NAT64 }}'
 on:
   workflow_dispatch:
     inputs:
@@ -18,13 +19,21 @@ on:
         options:
           - '0'
           - '1'
+      NAT64:
+        description: NAT 64
+        required: true
+        default: '0'
+        type: choice
+        options:
+          - '0'
+          - '1'
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
       BACKBONE_ROUTER: ${{ inputs.BACKBONE_ROUTER }}
       BORDER_ROUTING: ${{ inputs.BORDER_ROUTING }}
-      NAT64: 0
+      NAT64: ${{ inputs.NAT64 }}
       DNS64: 0
       DHCPV6_PD: 0
       DHCPV6_PD_REF: 0
