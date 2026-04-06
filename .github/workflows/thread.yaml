@@ -1,5 +1,5 @@
 name: Open Thread Border Router
-run-name: 'Backbone: ${{ inputs.BACKBONE_ROUTER }}, Border: ${{ inputs.BORDER_ROUTING }}, NAT64: ${{ inputs.NAT64 }}'
+run-name: 'Backbone: ${{ inputs.BACKBONE_ROUTER }}, Border: ${{ inputs.BORDER_ROUTING }}, NAT64: ${{ inputs.NAT64 }}, DNS64: ${{ inputs.DNS64 }}'
 on:
   workflow_dispatch:
     inputs:
@@ -27,6 +27,51 @@ on:
         options:
           - '0'
           - '1'
+      DNS64:
+        description: DNS 64
+        required: true
+        default: '0'
+        type: choice
+        options:
+          - '0'
+          - '1'
+      DHCPV6_PD:
+        description: DHCPV6_PD
+        required: true
+        default: '0'
+        type: choice
+        options:
+          - '0'
+          - '1'
+      DHCPV6_PD_REF:
+        description: DHCPV6_PD_REF
+        required: true
+        default: '0'
+        type: choice
+        options:
+          - '0'
+          - '1'
+      WEB_GUI:
+        description: WEB_GUI
+        required: true
+        default: '1'
+        type: choice
+        options:
+          - '0'
+          - '1'
+      REST_API:
+        description: REST_API
+        required: true
+        default: '1'
+        type: choice
+        options:
+          - '0'
+          - '1'
+      INFRA_IF_NAME:
+        description: network interface name
+        required: true
+        default: 'eth0'
+        type: string
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,12 +79,12 @@ jobs:
       BACKBONE_ROUTER: ${{ inputs.BACKBONE_ROUTER }}
       BORDER_ROUTING: ${{ inputs.BORDER_ROUTING }}
       NAT64: ${{ inputs.NAT64 }}
-      DNS64: 0
-      DHCPV6_PD: 0
-      DHCPV6_PD_REF: 0
-      WEB_GUI: 1
-      REST_API: 1
-      INFRA_IF_NAME: eth0
+      DNS64: ${{ inputs.DNS64 }}
+      DHCPV6_PD: ${{ inputs.DHCPV6_PD }}
+      DHCPV6_PD_REF: ${{ inputs.DHCPV6_PD_REF }}
+      WEB_GUI: ${{ inputs.WEB_GUI }}
+      REST_API: ${{ inputs.REST_API }}
+      INFRA_IF_NAME: ${{ inputs.INFRA_IF_NAME }}
     steps:
       - uses: actions/checkout@v6
         with:
