@@ -110,7 +110,7 @@ jobs:
           mkdir -p .debpkg-ctl/usr/bin
            cp /usr/sbin/ot-ctl .debpkg-ctl/usr/bin/ot-ctl
       - name: copy web artifacts
-        if: ${{ inputs.WEB_GUI || inputs.REST_API }}
+        if: ${{ inputs.WEB_GUI == '1' || inputs.REST_API == '1' }}
         run: |
           mkdir -p .debpkg-web/usr/bin
           cp /usr/sbin/otbr-web .debpkg-web/usr/bin/otbr-web
@@ -128,27 +128,27 @@ jobs:
           arch: 'amd64' # optional
           depends: '' # optional
           pre_depends: 'libc6 (>= 2.2.1)' # optional
-          desc: 'Open Thread Border Router' # optional
+          desc: 'Open Thread Border Router Agent' # optional
           homepage: 'https://github.com/openthread/ot-br-posix/'
           section: 'unknown'   # optional
           priority: 'required' # optional
       - uses: jiro4989/build-deb-action@v4
-        name: package cli
+        name: package ctl
         with:
-          package: OpenThreadBorderRouterCLI
-          package_root: .debpkg-cli
+          package: OpenThreadBorderRouterCTL
+          package_root: .debpkg-ctl
           maintainer: nobody
           version: '1'
           arch: 'amd64' # optional
           depends: '' # optional
           pre_depends: 'libc6 (>= 2.2.1)' # optional
-          desc: 'Open Thread Border Router' # optional
+          desc: 'Open Thread Border Router CLI' # optional
           homepage: 'https://github.com/openthread/ot-br-posix/'
           section: 'unknown'   # optional
           priority: 'required' # optional
       - uses: jiro4989/build-deb-action@v4
         name: package web
-        if: ${{ inputs.WEB_GUI || inputs.REST_API }}
+        if: ${{ inputs.WEB_GUI == '1' || inputs.REST_API == '1' }}
         with:
           package: OpenThreadBorderRouterWeb
           package_root: .debpkg-web
@@ -157,7 +157,7 @@ jobs:
           arch: 'amd64' # optional
           depends: '' # optional
           pre_depends: 'libc6 (>= 2.2.1)' # optional
-          desc: 'Open Thread Border Router' # optional
+          desc: 'Open Thread Border Router Web' # optional
           homepage: 'https://github.com/openthread/ot-br-posix/'
           section: 'unknown'   # optional
           priority: 'required' # optional
