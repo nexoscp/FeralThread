@@ -95,25 +95,63 @@ jobs:
         working-directory: ot-br-posix
       - run: bash ./script/setup
         working-directory: ot-br-posix
-      - name: copy all the things
+      - name: copy agent artifacts
         run: |
-          mkdir -p .debpkg/usr/bin
-          cp /usr/sbin/otbr-agent .debpkg/usr/bin/otbr-agent
-          cp /usr/sbin/ot-ctl .debpkg/usr/bin/ot-ctl
-          cp /usr/sbin/otbr-web .debpkg/usr/bin/otbr-web
-          mkdir -p .debpkg/etc/dbus-1/system.d/
-          cp  /etc/dbus-1/system.d/otbr-agent.conf  .debpkg/etc/dbus-1/system.d/otbr-agent.conf
-          mkdir -p .debpkg/usr/lib/systemd/system/
-          cp /usr/lib/systemd/system/otbr-agent.service .debpkg/usr/lib/systemd/system/otbr-agent.service
-          cp /usr/lib/systemd/system/otbr-web.service .debpkg/usr/lib/systemd/system/otbr-web.service
-          mkdir -p .debpkg/etc/default/
-          cp /etc/default/otbr-agent .debpkg/etc/default/otbr-agent
-          mkdir -p .debpkg/usr/share/otbr-web/frontend/
-          cp -r /usr/share/otbr-web/frontend/ .debpkg/usr/share/otbr-web/frontend/
+          mkdir -p .debpkg-agent/usr/bin
+          cp /usr/sbin/otbr-agent .debpkg-agent/usr/bin/otbr-agent
+          mkdir -p .debpkg-agent/etc/dbus-1/system.d/
+          cp  /etc/dbus-1/system.d/otbr-agent.conf  .debpkg-agent/etc/dbus-1/system.d/otbr-agent.conf
+          mkdir -p .debpkg-agent/usr/lib/systemd/system/
+          cp /usr/lib/systemd/system/otbr-agent.service .debpkg-agent/usr/lib/systemd/system/otbr-agent.service
+          mkdir -p .debpkg-agent/etc/default/
+          cp /etc/default/otbr-agent .debpkg-agent/etc/default/otbr-agent
+      - name: copy ctl artifacts
+        run: |
+          mkdir -p .debpkg-ctl/usr/bin
+           cp /usr/sbin/ot-ctl .debpkg-ctl/usr/bin/ot-ctl
+      - name: copy web artifacts
+        if: ${{ inputs.WEB_GUI || inputs.REST_API }}
+        run: |
+          mkdir -p .debpkg-web/usr/bin
+          cp /usr/sbin/otbr-web .debpkg-web/usr/bin/otbr-web
+          mkdir -p .debpkg-web/usr/lib/systemd/system/
+          cp /usr/lib/systemd/system/otbr-web.service .debpkg-web/usr/lib/systemd/system/otbr-web.service
+          mkdir -p .debpkg-web/usr/share/otbr-web/frontend/
+          cp -r /usr/share/otbr-web/frontend/ .debpkg-web/usr/share/otbr-web/frontend/
       - uses: jiro4989/build-deb-action@v4
+        name: package agent
         with:
-          package: OpenThreadBorderRouter
-          package_root: .debpkg
+          package: OpenThreadBorderRouterAgent
+          package_root: .debpkg-agent
+          maintainer: nobody
+          version: '1'
+          arch: 'amd64' # optional
+          depends: '' # optional
+          pre_depends: 'libc6 (>= 2.2.1)' # optional
+          desc: 'Open Thread Border Router' # optional
+          homepage: 'https://github.com/openthread/ot-br-posix/'
+          section: 'unknown'   # optional
+          priority: 'required' # optional
+      - uses: jiro4989/build-deb-action@v4
+        name: package cli
+        with:
+          package: OpenThreadBorderRouterCLI
+          package_root: .debpkg-cli
+          maintainer: nobody
+          version: '1'
+          arch: 'amd64' # optional
+          depends: '' # optional
+          pre_depends: 'libc6 (>= 2.2.1)' # optional
+          desc: 'Open Thread Border Router' # optional
+          homepage: 'https://github.com/openthread/ot-br-posix/'
+          section: 'unknown'   # optional
+          priority: 'required' # optional
+      - uses: jiro4989/build-deb-action@v4
+        name: package web
+        if: ${{ inputs.WEB_GUI || inputs.REST_API }}
+        with:
+          package: OpenThreadBorderRouterWeb
+          package_root: .debpkg-web
           maintainer: nobody
           version: '1'
           arch: 'amd64' # optional
