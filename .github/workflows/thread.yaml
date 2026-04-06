@@ -128,21 +128,21 @@ jobs:
           arch: 'amd64' # optional
           depends: '' # optional
           pre_depends: 'libc6 (>= 2.2.1)' # optional
-          desc: 'Open Thread Border Router' # optional
+          desc: 'Open Thread Border Router Agent' # optional
           homepage: 'https://github.com/openthread/ot-br-posix/'
           section: 'unknown'   # optional
           priority: 'required' # optional
       - uses: jiro4989/build-deb-action@v4
         name: package cli
         with:
-          package: OpenThreadBorderRouterCLI
-          package_root: .debpkg-cli
+          package: OpenThreadBorderRouterCTL
+          package_root: .debpkg-ctl
           maintainer: nobody
           version: '1'
           arch: 'amd64' # optional
           depends: '' # optional
           pre_depends: 'libc6 (>= 2.2.1)' # optional
-          desc: 'Open Thread Border Router' # optional
+          desc: 'Open Thread Border Router CLI' # optional
           homepage: 'https://github.com/openthread/ot-br-posix/'
           section: 'unknown'   # optional
           priority: 'required' # optional
@@ -157,7 +157,7 @@ jobs:
           arch: 'amd64' # optional
           depends: '' # optional
           pre_depends: 'libc6 (>= 2.2.1)' # optional
-          desc: 'Open Thread Border Router' # optional
+          desc: 'Open Thread Border Router Web' # optional
           homepage: 'https://github.com/openthread/ot-br-posix/'
           section: 'unknown'   # optional
           priority: 'required' # optional
